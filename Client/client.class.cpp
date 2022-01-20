@@ -3,12 +3,12 @@
 using std::cout; using std::endl;
 using std::cerr; using std::string;
 
-Client::Client(int type, int domain, int protocol)
+Client::Client(int domain, int type, int protocol)
 {
     _type = type;
     _domain = domain;
     _protocol = protocol;
-    
+
     _sd = -1;
     _loggedIn = false;
     _connected = false;
@@ -19,7 +19,7 @@ Client::Client(int type, int domain, int protocol)
 
 Client::~Client()
 {
-    this->SendMessage("quit");
+    SendMessage("quit");
     close(_sd);
 }
 
@@ -42,8 +42,8 @@ void Client::SendMessage(const std::string& text)
 
 void Client::Connect2Server(const string& ip, const string& port)
 {
-    if (this->_connected)
-        close(this->_sd); // maybe kein this?
+    if (_connected)
+        close(_sd);
 
     memset(&_myAddr, 0, sizeof(_myAddr));
     _myAddr.sin_family = _domain;
@@ -61,7 +61,7 @@ void Client::Connect2Server(const string& ip, const string& port)
     if(inet_aton(ip.data(), &_myAddr.sin_addr) == 0)
         PrintErrorAndExitFail("Error while converting ip to address data structure.");
     
-    if((connect(_sd, (struct sockaddr*)&_myAddr, sizeof(_myAddr))) != 0)
+    if((connect(_sd, (struct sockaddr*)&_myAddr, sizeof(_myAddr))) < 0)
         PrintErrorAndExitFail("Error while connecting to server.");
 
     _connected = true;
