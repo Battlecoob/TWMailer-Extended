@@ -1,4 +1,6 @@
 /obj/*
+/client
+/server
 
 # Prerequisites
 *.d

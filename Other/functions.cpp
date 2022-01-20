@@ -1,23 +1,38 @@
-/*
-***************************************************************************************************
-This file includes files that are used across multiple classes
-***************************************************************************************************
-*/
+#include "functions.h"
 
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
-
-#include <string>
-#include <iostream>
-
-#define BUF 1024
-
+using std::cout; using std::endl; 
 using std::string;
 
-void ReadLineSocket(int);
-void SendNBytesSocket(int);
-void PrintSuccAndExitSucc();
-void ReadNBytesSocket(int, int);
-void PrintErrorAndExitFail(const string&); // ref
+void PrintSuccAndExitSucc(int signal)
+{
+    cout << "Exit Client" << endl;
+    exit(EXIT_SUCCESS);
+}
 
-#endif
+void PrintErrorAndExitFail(const string& err)
+{
+    cout << err << endl;
+    exit(EXIT_FAILURE);
+}
+
+string ReadLineSocket(int sd)
+{
+    return "Not Implemented";
+}
+
+string ReadLine(string& text)
+{
+    cout << "Not Implemented" << endl;
+    return "Not Implemented";
+}
+
+string ReadNBytesSocket(int sd, int n)
+{
+    cout << "Not Implemented" << endl;
+    return "Not Implemented";
+}
+
+void SendNBytesSocket(int sd, int n, const std::string& text)
+{
+    cout << "Not Implemented" << endl;
+}
