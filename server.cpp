@@ -22,7 +22,10 @@ int main(int argc, char** argv)
     {
         // connect client
         ClientConnected client = server.AcceptClient();
+        std::cout << "Client connected from: " << client.GetIp() << std::endl;
+        
         // start thread with that client
+        server.ClientThread(client); // not yet threaded
     }
 
     exit(EXIT_SUCCESS);

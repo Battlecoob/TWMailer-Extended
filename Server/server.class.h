@@ -46,7 +46,7 @@ public:
     
     std::string ReadMessage(int); // socket
     ClientConnected AcceptClient();
-    void ClienThread(ClientConnected); // client
+    void ClientThread(ClientConnected); // client
     void StartServer(int, const std::string&); // backlog, port
     void SendMessage(int, const std::string&); // socket message
 };

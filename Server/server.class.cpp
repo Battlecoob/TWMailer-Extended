@@ -39,9 +39,9 @@ ClientConnected Server::AcceptClient()
     return ClientConnected(socket, inet_ntoa(clientAddr.sin_addr));
 }
 
-void Server::ClienThread(ClientConnected client)
+void Server::ClientThread(ClientConnected client)
 {
-    cout << "Not Implemented" << endl;
+    
 }
 
 void Server::StartServer(int backlog, const string& port)
