@@ -16,7 +16,7 @@ void PrintSuccAndExitSucc(int);
 void PrintErrorAndExitFail(const std::string&);
 
 std::string ReadLineSocket(int);
-std::string ReadLine(std::string&);
+std::string ReadOneLine(std::string&);
 std::string ReadNBytesSocket(int, int);
 
 void SendNBytesSocket(int, int, const std::string&);

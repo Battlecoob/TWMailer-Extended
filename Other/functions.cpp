@@ -1,7 +1,7 @@
 #include "functions.h"
 
 using std::cout; using std::endl; 
-using std::string;
+using std::string; using std::cerr;
 
 void PrintSuccAndExitSucc(int signal)
 {
@@ -20,10 +20,21 @@ string ReadLineSocket(int sd)
     return "Not Implemented";
 }
 
-string ReadLine(string& text)
+string ReadOneLine(string& text)
 {
-    cout << "Not Implemented" << endl;
-    return "Not Implemented";
+    string line = "";
+    size_t position;
+
+    for (position = 0; position < text.size(); position++)
+    {
+        if(text.at(position) == '\n')
+            break;
+        
+        line.push_back(text.at(position));
+    }
+    
+    text = text.substr(0, position);
+    return line;
 }
 
 string ReadNBytesSocket(int sd, int n)

@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "functions.h"
+
 class Message
 {
 private:
@@ -18,6 +20,6 @@ public:
     const std::string GetSubject() { return _subject; };
     const std::string GetRecipient() { return _recipient; };
 
-    const std::string ToMail();
+    const std::string ToMail(); // mal schauen ob ich die brauch / nehm -> scho auffaellig
     const std::string ToString();
 };
