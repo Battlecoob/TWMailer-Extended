@@ -8,6 +8,10 @@ Client::Client(int type, int domain, int protocol)
     _type = type;
     _domain = domain;
     _protocol = protocol;
+    
+    _sd = -1;
+    _loggedIn = false;
+    _connected = false;
 
     if((_sd = socket(_domain, _type, _protocol)) < 0)
         PrintErrorAndExitFail("Error while creating socket.");
