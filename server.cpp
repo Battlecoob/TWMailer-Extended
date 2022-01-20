@@ -21,9 +21,7 @@ int main(int argc, char** argv)
     while (true)
     {
         // connect client
-        std::cout << "waiting for connections\n";
         ClientConnected client = server.AcceptClient();
-        std::cout << "connected\n";
         // start thread with that client
     }
 
