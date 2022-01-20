@@ -41,7 +41,7 @@ ClientConnected Server::AcceptClient()
 
 void Server::ClientThread(ClientConnected client)
 {
-    
+    // hier stehengeblieben
 }
 
 void Server::StartServer(int backlog, const string& port)

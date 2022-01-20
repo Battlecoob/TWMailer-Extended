@@ -7,6 +7,7 @@ class ClientHandler
 {
 private:
     std::map<int, ClientStats> _clientMap; // ip as key?
+        // irgendwas passt hier mitm default constr von ClientStats nicht
 
 public:
     bool ExistsInMap(const std::string&);

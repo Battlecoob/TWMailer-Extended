@@ -1,8 +1,17 @@
 #include "clientStats.class.h"
 
+ClientStats::ClientStats()
+{
+    _ip = "";
+    _blocked = false;
+    _failedCounter = 0;
+}
+
 ClientStats::ClientStats(std::string ip)
 {
     _ip = ip;
+    _blocked = false;
+    _failedCounter = 0;
 }
 
 const bool ClientStats::IsBlocked()

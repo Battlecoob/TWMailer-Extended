@@ -4,7 +4,7 @@ using std::string;
 
 bool ClientHandler::ExistsInMap(const string& ip)
 {
-    for (auto i = 0; i < _clientMap.size(); i++)
+    for (size_t i = 0; i < _clientMap.size(); i++)
     {
         if(_clientMap[i].GetIp() == ip)
             return true;
@@ -25,7 +25,7 @@ void ClientHandler::AddClient2Map(const string& ip)
 
 void ClientHandler::DeleteClientFromMap(const string& ip)
 {
-    for (auto i = 0; i < _clientMap.size(); i++)
+    for (size_t i = 0; i < _clientMap.size(); i++)
     {
         if(_clientMap[i].GetIp() == ip)
             _clientMap.erase(i);

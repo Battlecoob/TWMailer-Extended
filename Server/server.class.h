@@ -16,7 +16,7 @@
 // #include <assert.h>
 
 #include "../Other/functions.h"
-// #include "clientHandler.class.h"
+#include "clientHandler.class.h"
 // #include "messageHandler.class.h"
 #include "clientConnected.class.h"
 
@@ -35,7 +35,7 @@ private:
 
     // MessageRepository* messageDb;
     // MessageHandler* _messageHandler;
-    // ClientHandler* _clientHandler;
+    ClientHandler* _clientHandler;
     // LdapClient* LDAP;
 
 public:
