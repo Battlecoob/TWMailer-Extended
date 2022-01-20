@@ -4,10 +4,10 @@ COMPILER=g++
 FLAGS=-Wall -pthread -std=c++11 
 LIBS= -lldap -llber 
 OBJDIR= obj
-OTHER= $(addprefix $(OBJDIR)/, functions.o)
-SERVER= $(addprefix $(OBJDIR)/, server.class.o)
+OTHER= $(addprefix $(OBJDIR)/, functions.o message.class.o)
+SERVER= $(addprefix $(OBJDIR)/, server.class.o messageHandler.class.o clientConnected.class.o clientHandler.class.o)
 CLIENT= $(addprefix $(OBJDIR)/, client.class.o inputValidator.o)
-# DATEBASE= $(addprefix $(OBJDIR)/,)
+DATEBASE= $(addprefix $(OBJDIR)/,)
 
 all: client server
 
@@ -33,7 +33,7 @@ obj/%.o: Client/%.cpp
 	$(COMPILER) $(FLAGS) -c $^ -o $@
 
 clean:
-	rm *.o client server obj/*.o
+	rm client server obj/*.o
 
 
 

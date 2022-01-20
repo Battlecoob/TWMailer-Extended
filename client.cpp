@@ -27,16 +27,13 @@ int main(int argc, char** argv)
 
     signal(SIGINT, PrintSuccAndExitSucc);
 
-    // if( (on_exit(cleanUp, (void*)&client)) != 0 )
-    //     error_and_die("error registering exit handler");
-
     client.Connect2Server(argv[1], argv[2]); // ip, port
-
     client.PrintHelpMessage();
 
     while(true)
     {
-
+        std::cout << "enter a command: ";
+        std::getline(std::cin, userCmd);
     }
 
     return 0;
