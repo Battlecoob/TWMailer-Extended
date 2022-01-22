@@ -15,18 +15,34 @@ Server::Server(int domain, int type, int protocol, const string& mailpool)
 
     memset(&_myAddr, 0, sizeof(_myAddr));
 
+    _clientHandler = new ClientHandler();
+
 }
+
 
 Server::~Server()
 {
+    if(_clientHandler != nullptr)
+        delete _clientHandler;
+
     close(_sd);
 }
 
+
 string Server::ReadMessage(int socket)
 {
-    cout << "Not Implemented" << endl;
-    return "Not Implemented";
+    std::cout << "in readmessage";
+    string message;
+
+    int len = std::stoi(ReadLineSocket(socket));
+    // if(len == 0)
+    //     return "quit";
+
+    // std::cout << message << std::endl;
+
+    // return message = ReadNBytesSocket(socket, len);
 }
+
 
 ClientConnected Server::AcceptClient()
 {
@@ -35,18 +51,38 @@ ClientConnected Server::AcceptClient()
     socklen_t addrlen = sizeof(clientAddr);
     int socket = accept(_sd, (struct sockaddr*)&clientAddr, &addrlen);
 
-    std::cout << "Client connected." << std::endl;
+    cout << "Client connected." << endl;
     return ClientConnected(socket, inet_ntoa(clientAddr.sin_addr));
 }
 
+
 void Server::ClientThread(ClientConnected client)
 {
-    // hier stehengeblieben
+    UserStruct userStruct;
+    string commandUnformated, command, response;
+    
+    if(!_clientHandler->ExistsInMap(client.GetIp()))
+        _clientHandler->AddClient2Map(client.GetIp());
+
+
+    while (true)
+    {
+        cout << "hmmmm\n";
+        commandUnformated = ReadMessage(client.GetSocket());
+        cout << "Command: " << commandUnformated << endl;
+        command = boost::algorithm::to_lower_copy(commandUnformated);
+        cout << "Command: " << command << endl;
+
+        if(command == "quit")
+            break;
+    }
+    close(client.GetSocket());
 }
+
 
 void Server::StartServer(int backlog, const string& port)
 {
-    std::cout << "Starting Server" << std::endl;
+    cout << "Starting Server" << endl;
 
     _myAddr.sin_family = _domain;
     _myAddr.sin_addr.s_addr = INADDR_ANY;
@@ -71,7 +107,8 @@ void Server::StartServer(int backlog, const string& port)
     // connect ldap
 }
 
-void Server::SendMessage(int socket, const std::string& message)
+
+void Server::SendMessage(int socket, const string& message)
 {
     cout << "Not Implemented" << endl;
 }

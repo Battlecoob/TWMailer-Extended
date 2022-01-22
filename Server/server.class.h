@@ -8,6 +8,7 @@
 #include <arpa/inet.h> // inet_aton()
 #include <sys/socket.h> // socket(), bind(), ...
 #include <netinet/in.h> // struct sockaddr_in
+#include <boost/algorithm/string.hpp> // to_lower_copy
 
 // #include <set>
 // #include <map>
@@ -17,8 +18,9 @@
 
 #include "../Other/functions.h"
 #include "clientHandler.class.h"
-// #include "messageHandler.class.h"
 #include "clientConnected.class.h"
+#include "../Other/user.struct.cpp"
+// #include "messageHandler.class.h"
 
 class Server
 {

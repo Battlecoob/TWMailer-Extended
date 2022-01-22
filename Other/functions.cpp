@@ -17,7 +17,28 @@ void PrintErrorAndExitFail(const string& err)
 
 string ReadLineSocket(int sd)
 {
-    return "Not Implemented";
+    int len;
+    char buffer;
+    string line = "";
+
+    while (true)
+    {
+        // read() because it's more generic and I don't need the additional options from recv()
+        if((len = read(sd, &buffer, 1)) == 1)
+        {
+            if(buffer != '\n')
+                line.push_back(buffer);
+
+            break;
+        }
+        else if(len == -1)
+            PrintErrorAndExitFail("Error while reading from Socket.");
+        
+        else if(len == 0)
+            return "0";
+    }
+
+    return line;    
 }
 
 string ReadOneLine(string& text)
@@ -39,8 +60,30 @@ string ReadOneLine(string& text)
 
 string ReadNBytesSocket(int sd, int n)
 {
-    cout << "Not Implemented" << endl;
-    return "Not Implemented";
+    std::cout << "in ReadNBytesSocket" << std::endl;
+    int len;
+    int bytesLeft = n;
+    int bytesRead = 0;
+    char buffer[n+1];
+
+    memset(buffer, 0, n+1);
+
+    while(bytesLeft > 0)
+    {
+        if((len = read(sd, buffer + bytesRead, bytesLeft)) == 1)
+        {
+            bytesRead++;
+            bytesLeft--;
+        }
+        else if(len == -1)
+            PrintErrorAndExitFail("Error while reading from Socket.");
+        
+        else if(len == 0)
+            return "0";
+    }
+    buffer[n] = '\0';
+
+    return string(buffer);
 }
 
 void SendNBytesSocket(int sd, int n, const std::string& text)
