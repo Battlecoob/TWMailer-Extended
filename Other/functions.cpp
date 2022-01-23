@@ -79,9 +79,6 @@ string ReadNBytesSocket(int sd, int n)
         if((len = read(sd, buffer + bytesRead, bytesLeft)) == -1)
             PrintErrorAndExitFail("Error while reading from Socket.ReadNBytesSocket()");
         
-        // else if(len == 0)
-        //     return "0";
-
         bytesRead += n;
         bytesLeft -= n;
     }

@@ -1,7 +1,5 @@
 #include <string>
-// #include <errno.h>
 #include <cstring>
-// #include <fcntl.h>
 #include <iostream>
 #include <unistd.h> // close()
 #include <sys/types.h>

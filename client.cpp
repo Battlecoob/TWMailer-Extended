@@ -1,24 +1,15 @@
-// #include <errno.h>
 #include <set>
 #include <signal.h>
 #include <iostream>
-// #include <stdexcept>
-// #include <arpa/inet.h>
-// #include <netinet/in.h>
-// #include <sys/socket.h>
-// #include <sys/types.h>
 #include <boost/algorithm/string.hpp>
 
 #include "Other/functions.h"
 #include "Client/client.class.h"
-// #include "Other/command.set.cpp"
 
 
 int main(int argc, char** argv)
 {
     std::string userCommandUnformated;
-    // Session session;
-    // InputValidator.reader(std::cin);
     std::set<std::string> commands = { "login", "send", "read", "list", "delete", "help", "quit"};
 
     if(argc != 3)
@@ -65,7 +56,6 @@ int main(int argc, char** argv)
                 client.ReadParamLine("Username", username, 8);
                 client.ReadParamLine("Password", password, 100);
                 
-                //TEST
                 send += "login\n";
                 send += username + "\n";
                 send += password;
@@ -84,6 +74,7 @@ int main(int argc, char** argv)
             }
             else if(userCommand == "send")
             {
+                send = "send";
                 client.SendMessage(userCommand);
                 response = client.ReadMessage();
                 std::cout << response << std::endl;
@@ -91,24 +82,48 @@ int main(int argc, char** argv)
             }
             else if(userCommand == "read")
             {
-                client.SendMessage(userCommand);
-                response = client.ReadMessage();
-                std::cout << response << std::endl;
+                std::string messageNumber;
+                client.ReadParamLine("Message Number:", messageNumber, 100);
 
+                send = "read\n";
+                send += messageNumber;
+
+                client.SendMessage(send);
+                response = client.ReadMessage();
+                std::string tmp = ReadOneLine(response);
+                if(tmp == "ERR")
+                {
+                    std::cout << tmp << std::endl;
+                    continue;
+                }
+
+                std::cout << tmp << std::endl;
+                std::cout << "Sender: " << ReadOneLine(response) << std::endl;
+                std::cout << "Recipient: " << ReadOneLine(response) << std::endl;
+                std::cout << "Subject: " << ReadOneLine(response) << std::endl;
+                std::cout << "Message text: " << response << std::endl;
+                continue;
             }
             else if(userCommand == "list")
             {
-                client.SendMessage(userCommand);
+                send = "list\n";
+                client.SendMessage(send);
                 response = client.ReadMessage();
-                std::cout << response << std::endl;
-
+                continue;
             }
             else if(userCommand == "delete")
             {
-                client.SendMessage(userCommand);
+                std::string messageNumber;
+                
+                client.ReadParamLine("Message Number:", messageNumber, 100);
+
+                send = "delete\n";
+                send += messageNumber;
+
+                client.SendMessage(send);
                 response = client.ReadMessage();
                 std::cout << response << std::endl;
-
+                continue;
             }
             else if(userCommand == "quit")
             {
@@ -130,6 +145,5 @@ int main(int argc, char** argv)
             std::cerr << e.what() << '\n';
         }
     }
-    // close client socket?
     exit(EXIT_SUCCESS);
 }

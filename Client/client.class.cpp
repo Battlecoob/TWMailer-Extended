@@ -49,10 +49,8 @@ void Client::SendMessage(const string& text)
 
     // send size of message
     // (socket, size of the stringsize , size of text)
-    // std::cout << std::to_string(text.size()) << std::endl;
     SendNBytesSocket(_sd, std::to_string(text.size()).size() + 1, std::to_string(text.size()) + '\n');
     // send message
-    // std::cout << text << std::endl;
     SendNBytesSocket(_sd, text.size(), text);
 }
 

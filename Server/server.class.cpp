@@ -16,6 +16,7 @@ Server::Server(int domain, int type, int protocol, const string& mailpool)
     memset(&_myAddr, 0, sizeof(_myAddr));
 
     _ldap = new LDAPClass();
+    _repo = new Repository();
     _clientHandler = new ClientHandler();
 }
 
@@ -27,6 +28,9 @@ Server::~Server()
     
     if(_ldap != nullptr)
         delete _ldap;
+    
+    if(_repo != nullptr)
+        delete _repo;
 
     close(_sd);
 }
@@ -88,6 +92,12 @@ void Server::ClientThread(ClientConnected client)
         // commands
         if(command == "login")
         {
+            if(client.LoggedIn())
+            {
+                SendMessage(client.GetSocket(), "ERR");
+                continue;
+            }
+
             std::string username = ReadOneLine(request);
             std::string password = ReadOneLine(request);
 
@@ -112,18 +122,34 @@ void Server::ClientThread(ClientConnected client)
         }
         else if(command == "send")
         {
+            SendMessage(client.GetSocket(), "Not Implemented");
             continue;
         }
         else if(command == "read")
         {
+            std::string messageNumberStr = ReadOneLine(request);
+            int messageNumber = std::stoi(messageNumberStr);
+            
+            std::string content = _repo->Read(userStruct.username, messageNumber);
+            std::cout << content << std::endl;
+            SendMessage(client.GetSocket(), content);
             continue;
         }
         else if(command == "list")
         {
+            SendMessage(client.GetSocket(), "Not Implemented");
             continue;
         }
         else if(command == "delete")
         {
+            std::string messageNumberStr = ReadOneLine(request);
+            int messageNumber = std::stoi(messageNumberStr);
+
+            if(_repo->Delete(userStruct.username, messageNumber))
+                SendMessage(client.GetSocket(), "OK");
+            else
+                SendMessage(client.GetSocket(), "ERR");
+
             continue;
         }
 
@@ -161,8 +187,6 @@ void Server::StartServer(int backlog, const string& port)
         PrintErrorAndExitFail("Error starting listening port");
 
     _listening = true;
-    // establish message db
-    // connect ldap
     _ldap->LDAPConnect();
 }
 

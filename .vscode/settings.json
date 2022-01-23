@@ -57,6 +57,9 @@
         "list": "cpp",
         "cinttypes": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
-    }
+        "variant": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

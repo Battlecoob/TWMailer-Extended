@@ -20,7 +20,6 @@ int main(int argc, char** argv)
 
     while (true)
     {
-        // connect client
         ClientConnected client = server.AcceptClient();
 
         if(!server.ClientIsBlocked(client.GetIp()))

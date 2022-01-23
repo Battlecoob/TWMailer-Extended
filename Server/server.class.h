@@ -1,7 +1,5 @@
 #include <string>
-// #include <errno.h>
 #include <cstring>
-// #include <fcntl.h>
 #include <set>
 #include <iostream>
 #include <unistd.h> // close()
@@ -11,19 +9,13 @@
 #include <netinet/in.h> // struct sockaddr_in
 #include <boost/algorithm/string.hpp> // to_lower_copy
 
-// #include <set>
-// #include <map>
-// #include <thread>
-// #include <sstream>
-// #include <assert.h>
 
 #include "ldap.class.h"
+#include "repository.class.h"
 #include "../Other/functions.h"
 #include "clientHandler.class.h"
 #include "clientConnected.class.h"
 #include "../Other/user.struct.cpp"
-// #include "../Other/command.set.cpp"
-// #include "messageHandler.class.h"
 
 class Server
 {
@@ -38,9 +30,8 @@ private:
     struct sockaddr_in _myAddr;
     socklen_t _addrlen;
 
-    // MessageRepository* messageDb;
-    // MessageHandler* _messageHandler;
     LDAPClass* _ldap;
+    Repository* _repo;
     ClientHandler* _clientHandler;
 
 public:
