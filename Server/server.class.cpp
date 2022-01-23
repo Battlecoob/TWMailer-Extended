@@ -74,6 +74,7 @@ void Server::ClientThread(ClientConnected client)
         if(command == "quit")
         {
             std::cout << userStruct.username << " is quitting." << std::endl;
+            _clientHandler->DeleteClientFromMap(client.GetIp());
             break;
         }
 

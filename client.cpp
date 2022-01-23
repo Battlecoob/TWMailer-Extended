@@ -1,4 +1,5 @@
 // #include <errno.h>
+#include <set>
 #include <signal.h>
 #include <iostream>
 // #include <stdexcept>
@@ -10,8 +11,7 @@
 
 #include "Other/functions.h"
 #include "Client/client.class.h"
-#include "Other/command.set.cpp"
-
+// #include "Other/command.set.cpp"
 
 
 int main(int argc, char** argv)
@@ -19,6 +19,7 @@ int main(int argc, char** argv)
     std::string userCommandUnformated;
     // Session session;
     // InputValidator.reader(std::cin);
+    std::set<std::string> commands = { "login", "send", "read", "list", "delete", "help", "quit"};
 
     if(argc != 3)
         PrintErrorAndExitFail("Invalid amount of arguments:\nUsage: ./client <ip4-address> <port>.");
@@ -92,9 +93,11 @@ int main(int argc, char** argv)
             else if(userCommand == "quit")
             {
                 client.SendMessage(userCommand);
-                response = client.ReadMessage();
-                std::cout << response << std::endl;
-
+                break;
+            }
+            else if(userCommand == "help")
+            {
+                client.PrintHelpMessage();
             }
             else
             {
@@ -109,6 +112,6 @@ int main(int argc, char** argv)
 
         
     }
-
-    return 0;
+    // close client socket?
+    exit(EXIT_SUCCESS);
 }

@@ -2,6 +2,7 @@
 // #include <errno.h>
 #include <cstring>
 // #include <fcntl.h>
+#include <set>
 #include <iostream>
 #include <unistd.h> // close()
 #include <sys/types.h>
@@ -20,7 +21,7 @@
 #include "clientHandler.class.h"
 #include "clientConnected.class.h"
 #include "../Other/user.struct.cpp"
-#include "../Other/command.set.cpp"
+// #include "../Other/command.set.cpp"
 // #include "messageHandler.class.h"
 
 class Server
@@ -44,7 +45,9 @@ private:
 public:
     Server(int, int, int, const std::string&); // domain, type, protocol, mailpool
     ~Server();
-
+    
+    std::set<std::string> commands = { "login", "send", "read", "list", "delete", "help", "quit"};
+    
     const bool Listening() { return _listening; }
     
     std::string ReadMessage(int); // socket
