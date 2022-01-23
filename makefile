@@ -5,8 +5,8 @@ FLAGS=-Wall -pthread -std=c++11
 LIBS= -lldap -llber 
 OBJDIR= obj
 OTHER= $(addprefix $(OBJDIR)/, functions.o message.class.o user.struct.o command.set.o)
-SERVER= $(addprefix $(OBJDIR)/, server.class.o messageHandler.class.o clientConnected.class.o clientHandler.class.o clientStats.class.o)
-CLIENT= $(addprefix $(OBJDIR)/, client.class.o inputValidator.o)
+SERVER= $(addprefix $(OBJDIR)/, server.class.o messageHandler.class.o clientConnected.class.o clientHandler.class.o clientStats.class.o ldap.class.o)
+CLIENT= $(addprefix $(OBJDIR)/, client.class.o)
 DATEBASE= $(addprefix $(OBJDIR)/,)
 
 all: client server

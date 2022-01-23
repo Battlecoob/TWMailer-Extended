@@ -15,8 +15,8 @@ Server::Server(int domain, int type, int protocol, const string& mailpool)
 
     memset(&_myAddr, 0, sizeof(_myAddr));
 
+    _ldap = new LDAPClass();
     _clientHandler = new ClientHandler();
-
 }
 
 
@@ -24,6 +24,9 @@ Server::~Server()
 {
     if(_clientHandler != nullptr)
         delete _clientHandler;
+    
+    if(_ldap != nullptr)
+        delete _ldap;
 
     close(_sd);
 }
@@ -57,7 +60,7 @@ ClientConnected Server::AcceptClient()
 void Server::ClientThread(ClientConnected client)
 {
     UserStruct userStruct;
-    string commandUnformated, command, response;
+    string request, command, response;
     
     if(!_clientHandler->ExistsInMap(client.GetIp()))
         _clientHandler->AddClient2Map(client.GetIp());
@@ -66,9 +69,9 @@ void Server::ClientThread(ClientConnected client)
 
     while (true)
     {
-        commandUnformated = ReadMessage(client.GetSocket());
-        command = boost::algorithm::to_lower_copy(commandUnformated);
-        cout << "\nCommand: " << command << endl;
+        request = ReadMessage(client.GetSocket());
+        command = boost::algorithm::to_lower_copy(ReadOneLine(request));
+        cout << "\nCommand: " << command << "\n" << endl;
 
         // user wants to quit. No additional query is needed
         if(command == "quit")
@@ -79,32 +82,40 @@ void Server::ClientThread(ClientConnected client)
         }
 
         // invalid command -> should never happen
-        if(commands.find(command) == commands.end())
-        {
-            SendMessage(client.GetSocket(), "Invalid Command. Try again");
-            continue;
-        }
+        // if(commands.find(command) == commands.end())
+        // {
+        //     SendMessage(client.GetSocket(), "\nInvalid Command. Try again");
+        //     continue;
+        // }
         
         // check if blocked
         if(_clientHandler->IsBlocked(client.GetIp()))
         {
             std::cout << userStruct.username << " is blocked." << std::endl;
-            SendMessage(client.GetSocket(), "You're currently blacklisted. Try again later");
+            SendMessage(client.GetSocket(), "\nYou're currently blacklisted. Try again later");
             continue;
         }
 
         // check if logged in
         if(!client.LoggedIn() && command != "login")
         {
-
-            SendMessage(client.GetSocket(), "You need to be logged in first.");
+            SendMessage(client.GetSocket(), "\nYou need to be logged in first.");
             continue;
         }
 
         // commands
         if(command == "login")
         {
-            
+            std::string username = ReadOneLine(request);
+            std::string password = ReadOneLine(request);
+
+            std::cout << username << std::endl;
+            std::cout << password << std::endl;
+
+            userStruct.username = username;
+            // ldap login
+            SendMessage(client.GetSocket(), "OK");
+            continue;
         }
         else if(command == "send")
         {
@@ -123,7 +134,7 @@ void Server::ClientThread(ClientConnected client)
             
         }
 
-        PrintErrorAndExitFail("Something went wrong.");
+        // PrintErrorAndExitFail("Something went wrong.");
     }
     close(client.GetSocket());
 }
@@ -154,6 +165,7 @@ void Server::StartServer(int backlog, const string& port)
     _listening = true;
     // establish message db
     // connect ldap
+    _ldap->LDAPConnect();
 }
 
 

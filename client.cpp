@@ -55,10 +55,19 @@ int main(int argc, char** argv)
             
             if (userCommand == "login")
             {
-                client.SendMessage(userCommand);
-                response = client.ReadMessage();
-                std::cout << response << std::endl;
+                std::string username, password;
+                
+                // client.SendMessage("login");
+                
+                client.ReadParamLine("Username", username, 8);
+                client.ReadParamLine("Password", password, 100);
+                
+                //TEST
+                send += "login\n";
+                send += username + "\n";
+                send += password;
 
+                client.SendMessage(send);
                 response = client.ReadMessage();
                 std::cout << response << std::endl;
             }

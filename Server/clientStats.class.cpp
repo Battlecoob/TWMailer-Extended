@@ -27,5 +27,5 @@ void ClientStats::IncrFailedAttempts()
 {
     _failedCounter++;
     if(_failedCounter >= MAX_FAILED_LOGIN)
-        _timeStartBeingBlocked = std::chrono::high_resolution_clock::now();
+        _timeStartBeingBlocked = std::chrono::system_clock::now();
 }

@@ -83,3 +83,39 @@ void Client::Connect2Server(const string& ip, const string& port)
 
     _connected = true;
 }
+
+
+
+void Client::ReadParamLine(const string& param, string& target, const std::size_t maxLen)
+{
+    while (true)
+    {
+        std::cout << "\nEnter " << param << " (max Characters: " << maxLen << "): " << std::endl;
+        std::getline(std::cin, target);
+
+        if(target.size() <= maxLen)
+            break;
+
+        std::cout << "Invalid input." << std::endl;
+    }
+}
+
+void Client::ReadParamMultiLine(const string& param, string& target)
+{
+    std::cout << "\nEnter " << param << "(multi-line; no length restrictions. '.' ends the command): " << std::endl;
+    
+    std::string tmp;
+    
+    while (true)
+    {
+        std::string line;
+        std::getline(std::cin, line);
+
+        if(line == ".")
+            break;
+        
+        tmp += line + '\n';
+    }
+    
+    target = tmp;
+}

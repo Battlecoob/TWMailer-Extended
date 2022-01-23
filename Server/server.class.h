@@ -17,6 +17,7 @@
 // #include <sstream>
 // #include <assert.h>
 
+#include "ldap.class.h"
 #include "../Other/functions.h"
 #include "clientHandler.class.h"
 #include "clientConnected.class.h"
@@ -39,8 +40,8 @@ private:
 
     // MessageRepository* messageDb;
     // MessageHandler* _messageHandler;
+    LDAPClass* _ldap;
     ClientHandler* _clientHandler;
-    // LdapClient* LDAP;
 
 public:
     Server(int, int, int, const std::string&); // domain, type, protocol, mailpool

@@ -31,7 +31,11 @@ public:
     const bool IsLoggedIn() { return _loggedIn; }
 
     void PrintHelpMessage();
+    
     std::string ReadMessage();
     void SendMessage(const std::string&);
     void Connect2Server(const std::string&, const std::string&);
+    
+    void ReadParamLine(const std::string&, std::string&, const std::size_t);
+    void ReadParamMultiLine(const std::string&, std::string&);
 };

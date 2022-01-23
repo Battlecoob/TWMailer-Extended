@@ -25,17 +25,20 @@ string ReadLineSocket(int sd)
     {
         // read() because it's more generic and I don't need the additional options from recv()
         if((len = read(sd, &buffer, 1)) == -1)
-            PrintErrorAndExitFail("Error while reading from Socket.");
+            PrintErrorAndExitFail("Error while reading from Socket. ReadLineSocket()");
         
         else if(len == 0)
             return "0";
 
-        if(buffer != '\n')
-            line.push_back(buffer);
         else
-            break;        
-    }
+        {
+            if(buffer == '\n')
+                break;
 
+            line.push_back(buffer);
+        }
+
+    }
     return line;    
 }
 
@@ -51,8 +54,14 @@ string ReadOneLine(string& text)
         
         line.push_back(text.at(position));
     }
+    try
+    {
+        text = text.substr(position + 1);
+    }
+    catch(...)
+    {
+    }
     
-    text = text.substr(0, position);
     return line;
 }
 
@@ -68,7 +77,7 @@ string ReadNBytesSocket(int sd, int n)
     while(bytesLeft)
     {
         if((len = read(sd, buffer + bytesRead, bytesLeft)) == -1)
-            PrintErrorAndExitFail("Error while reading from Socket.");
+            PrintErrorAndExitFail("Error while reading from Socket.ReadNBytesSocket()");
         
         // else if(len == 0)
         //     return "0";
