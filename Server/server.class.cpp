@@ -73,7 +73,7 @@ void Server::ClientThread(ClientConnected client)
         // user wants to quit. No additional query is needed
         if(command == "quit")
         {
-            std::cout << userStruct.username << " is quitting." << std::endl;
+            std::cout << client.GetIp() << " is quitting." << std::endl;
             _clientHandler->DeleteClientFromMap(client.GetIp());
             break;
         }
@@ -142,8 +142,6 @@ bool Server::ClientIsBlocked(const std::string& ip){
 
 void Server::StartServer(int backlog, const string& port)
 {
-    cout << "Starting Server" << endl;
-
     _myAddr.sin_family = _domain;
     _myAddr.sin_addr.s_addr = INADDR_ANY;
 

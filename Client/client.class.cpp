@@ -25,8 +25,7 @@ Client::~Client()
 
 void Client::PrintHelpMessage()
 {
-    cout << "Valid Commands include: login | send | read | list | delete | help" << endl;
-    cout << "To Exit the program type 'quit'" << endl;
+    cout << "Valid Commands include: login | send | read | list | delete | help | quit" << endl;
 }
 
 string Client::ReadMessage()
