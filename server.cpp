@@ -16,16 +16,26 @@ int main(int argc, char** argv)
     signal(SIGINT, PrintSuccAndExitSucc);
 
     server.StartServer(BACKLOG, argv[1]);
-    std::cout << "Listening on port: " << argv[1] << ".\n";
+    std::cout << "\nListening on port: " << argv[1] << ".\n";
 
     while (true)
     {
         // connect client
         ClientConnected client = server.AcceptClient();
-        std::cout << "Client connected from: " << client.GetIp() << std::endl;
+
+        if(!server.ClientIsBlocked(client.GetIp()))
+        {
+            std::cout << "Client connected from: " << client.GetIp() << std::endl;
+            server.SendMessage(client.GetSocket(), "OK\nYou're successfully connected to the Mail-Server.");
+            // start thread with that client
+            server.ClientThread(client); // not yet threaded
+        }
+        else
+        {
+            server.SendMessage(client.GetSocket(), "ERR\nYou're currently blacklisted for up to a minute. Try again later");
+            continue;
+        }
         
-        // start thread with that client
-        server.ClientThread(client); // not yet threaded
     }
 
     exit(EXIT_SUCCESS);

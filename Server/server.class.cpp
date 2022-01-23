@@ -52,7 +52,6 @@ ClientConnected Server::AcceptClient()
     socklen_t addrlen = sizeof(clientAddr);
     int socket = accept(_sd, (struct sockaddr*)&clientAddr, &addrlen);
 
-    cout << "Client connected." << endl;
     return ClientConnected(socket, inet_ntoa(clientAddr.sin_addr));
 }
 
@@ -65,13 +64,11 @@ void Server::ClientThread(ClientConnected client)
     if(!_clientHandler->ExistsInMap(client.GetIp()))
         _clientHandler->AddClient2Map(client.GetIp());
 
-    userStruct.username = "anonym";
-
     while (true)
     {
         request = ReadMessage(client.GetSocket());
         command = boost::algorithm::to_lower_copy(ReadOneLine(request));
-        cout << "\nCommand: " << command << "\n" << endl;
+        cout << "Command: " << command << endl;
 
         // user wants to quit. No additional query is needed
         if(command == "quit")
@@ -81,25 +78,10 @@ void Server::ClientThread(ClientConnected client)
             break;
         }
 
-        // invalid command -> should never happen
-        // if(commands.find(command) == commands.end())
-        // {
-        //     SendMessage(client.GetSocket(), "\nInvalid Command. Try again");
-        //     continue;
-        // }
-        
-        // check if blocked
-        if(_clientHandler->IsBlocked(client.GetIp()))
-        {
-            std::cout << userStruct.username << " is blocked." << std::endl;
-            SendMessage(client.GetSocket(), "\nYou're currently blacklisted. Try again later");
-            continue;
-        }
-
         // check if logged in
         if(!client.LoggedIn() && command != "login")
         {
-            SendMessage(client.GetSocket(), "\nYou need to be logged in first.");
+            SendMessage(client.GetSocket(), "You need to be logged in first.");
             continue;
         }
 
@@ -109,34 +91,52 @@ void Server::ClientThread(ClientConnected client)
             std::string username = ReadOneLine(request);
             std::string password = ReadOneLine(request);
 
-            std::cout << username << std::endl;
-            std::cout << password << std::endl;
-
-            userStruct.username = username;
             // ldap login
+            if(!_ldap->LDAPLogin(username, password))
+            {
+                _clientHandler->AddFailedLoginAttempt(client.GetIp());
+                
+                if (_clientHandler->IsBlocked(client.GetIp())){
+                    std::cout << "is blocked" << std::endl;
+                    SendMessage(client.GetSocket(), "ERR\nYou're currently blocked. Try later");
+                    break;
+                }
+                SendMessage(client.GetSocket(), "ERR");
+                continue;
+            }
+            
             SendMessage(client.GetSocket(), "OK");
+            userStruct.username = username;
+            client.Login();
             continue;
         }
         else if(command == "send")
         {
-            
+            continue;
         }
         else if(command == "read")
         {
-            
+            continue;
         }
         else if(command == "list")
         {
-            
+            continue;
         }
         else if(command == "delete")
         {
-            
+            continue;
         }
 
-        // PrintErrorAndExitFail("Something went wrong.");
+        PrintErrorAndExitFail("Something went wrong.");
     }
     close(client.GetSocket());
+}
+
+bool Server::ClientIsBlocked(const std::string& ip){
+    if(!_clientHandler->ExistsInMap(ip))
+        return false;
+    
+    return _clientHandler->IsBlocked(ip);
 }
 
 

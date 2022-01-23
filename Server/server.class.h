@@ -54,6 +54,7 @@ public:
     std::string ReadMessage(int); // socket
     ClientConnected AcceptClient();
     void ClientThread(ClientConnected); // client
+    bool ClientIsBlocked(const std::string&);
     void StartServer(int, const std::string&); // backlog, port
     void SendMessage(int, const std::string&); // socket message
 };

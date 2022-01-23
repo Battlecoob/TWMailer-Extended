@@ -24,13 +24,20 @@ int main(int argc, char** argv)
     if(argc != 3)
         PrintErrorAndExitFail("Invalid amount of arguments:\nUsage: ./client <ip4-address> <port>.");
 
-    std::cout << "Trying to connect to Server with ip: " << argv[1] << " and port: " << argv[2] << "." << std::endl;
+    std::cout << "\nTrying to connect to Server with ip: " << argv[1] << " and port: " << argv[2] << "." << std::endl;
 
     Client client(AF_INET, SOCK_STREAM, 0);
 
     signal(SIGINT, PrintSuccAndExitSucc);
 
     client.Connect2Server(argv[1], argv[2]); // ip, port
+    
+    // check if client could connect to server
+    std::string response = client.ReadMessage();
+    if(ReadOneLine(response) == "ERR")
+        PrintErrorAndExitFail(ReadOneLine(response));
+
+    std::cout << response << std::endl;
     client.PrintHelpMessage();
 
     while(true)
@@ -39,14 +46,12 @@ int main(int argc, char** argv)
         std::cout << "enter a command: ";
         std::getline(std::cin, userCommandUnformated);
         
-        
         try
         {
-            std::string response;
 
             if(commands.find(userCommandUnformated) == commands.end())
             {
-                std::cout << "\n\nInvalid Command" << std::endl;
+                std::cout << "\nInvalid Command" << std::endl;
                 client.PrintHelpMessage();
                 continue;
             }
@@ -56,8 +61,6 @@ int main(int argc, char** argv)
             if (userCommand == "login")
             {
                 std::string username, password;
-                
-                // client.SendMessage("login");
                 
                 client.ReadParamLine("Username", username, 8);
                 client.ReadParamLine("Password", password, 100);
@@ -69,7 +72,15 @@ int main(int argc, char** argv)
 
                 client.SendMessage(send);
                 response = client.ReadMessage();
-                std::cout << response << std::endl;
+                std::string tmp = ReadOneLine(response);
+                std::cout << tmp << std::endl; // ERR | OK
+                
+                tmp = ReadOneLine(response);
+                if(tmp != "ERR" && tmp != "OK") // blocked
+                {
+                    std::cout << tmp << std::endl;
+                    break;
+                }
             }
             else if(userCommand == "send")
             {
@@ -118,8 +129,6 @@ int main(int argc, char** argv)
         {
             std::cerr << e.what() << '\n';
         }
-
-        
     }
     // close client socket?
     exit(EXIT_SUCCESS);

@@ -25,7 +25,7 @@ Client::~Client()
 
 void Client::PrintHelpMessage()
 {
-    cout << "\nValid Commands include:\nlogin | send | read | list | delete | help" << endl;
+    cout << "Valid Commands include: login | send | read | list | delete | help" << endl;
     cout << "To Exit the program type 'quit'" << endl;
 }
 
@@ -90,7 +90,7 @@ void Client::ReadParamLine(const string& param, string& target, const std::size_
 {
     while (true)
     {
-        std::cout << "\nEnter " << param << " (max Characters: " << maxLen << "): " << std::endl;
+        std::cout << "Enter " << param << " (max Characters: " << maxLen << "): ";
         std::getline(std::cin, target);
 
         if(target.size() <= maxLen)
@@ -102,7 +102,7 @@ void Client::ReadParamLine(const string& param, string& target, const std::size_
 
 void Client::ReadParamMultiLine(const string& param, string& target)
 {
-    std::cout << "\nEnter " << param << "(multi-line; no length restrictions. '.' ends the command): " << std::endl;
+    std::cout << "Enter " << param << "('.' ends the command): ";
     
     std::string tmp;
     
