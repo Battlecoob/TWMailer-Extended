@@ -24,18 +24,16 @@ string ReadLineSocket(int sd)
     while (true)
     {
         // read() because it's more generic and I don't need the additional options from recv()
-        if((len = read(sd, &buffer, 1)) == 1)
-        {
-            if(buffer != '\n')
-                line.push_back(buffer);
-
-            break;
-        }
-        else if(len == -1)
+        if((len = read(sd, &buffer, 1)) == -1)
             PrintErrorAndExitFail("Error while reading from Socket.");
         
         else if(len == 0)
             return "0";
+
+        if(buffer != '\n')
+            line.push_back(buffer);
+        else
+            break;        
     }
 
     return line;    
@@ -60,26 +58,23 @@ string ReadOneLine(string& text)
 
 string ReadNBytesSocket(int sd, int n)
 {
-    std::cout << "in ReadNBytesSocket" << std::endl;
+    char buffer[n+1];
+    memset(buffer, 0, n+1);
+    
     int len;
     int bytesLeft = n;
     int bytesRead = 0;
-    char buffer[n+1];
 
-    memset(buffer, 0, n+1);
-
-    while(bytesLeft > 0)
+    while(bytesLeft)
     {
-        if((len = read(sd, buffer + bytesRead, bytesLeft)) == 1)
-        {
-            bytesRead++;
-            bytesLeft--;
-        }
-        else if(len == -1)
+        if((len = read(sd, buffer + bytesRead, bytesLeft)) == -1)
             PrintErrorAndExitFail("Error while reading from Socket.");
         
-        else if(len == 0)
-            return "0";
+        // else if(len == 0)
+        //     return "0";
+
+        bytesRead += n;
+        bytesLeft -= n;
     }
     buffer[n] = '\0';
 
@@ -88,5 +83,16 @@ string ReadNBytesSocket(int sd, int n)
 
 void SendNBytesSocket(int sd, int n, const std::string& text)
 {
-    cout << "Not Implemented" << endl;
+    int bytesSent = 0;
+    int bytesLeft = text.size();
+    int len;
+
+    while (bytesLeft)
+    {
+        if((len = write(sd, text.data() + bytesSent, bytesLeft)) == -1)
+            PrintErrorAndExitFail("Error while sending Message from client.");
+        
+        bytesSent += len;
+        bytesLeft -= len;
+    }
 }

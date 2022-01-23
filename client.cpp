@@ -6,15 +6,17 @@
 // #include <netinet/in.h>
 // #include <sys/socket.h>
 // #include <sys/types.h>
+#include <boost/algorithm/string.hpp>
 
 #include "Other/functions.h"
 #include "Client/client.class.h"
+#include "Other/command.set.cpp"
 
 
 
 int main(int argc, char** argv)
 {
-    std::string userCmd;
+    std::string userCommandUnformated;
     // Session session;
     // InputValidator.reader(std::cin);
 
@@ -32,8 +34,80 @@ int main(int argc, char** argv)
 
     while(true)
     {
+        std::string send;
         std::cout << "enter a command: ";
-        std::getline(std::cin, userCmd);
+        std::getline(std::cin, userCommandUnformated);
+        
+        
+        try
+        {
+            std::string response;
+
+            if(commands.find(userCommandUnformated) == commands.end())
+            {
+                std::cout << "\n\nInvalid Command" << std::endl;
+                client.PrintHelpMessage();
+                continue;
+            }
+
+            std::string userCommand = boost::algorithm::to_lower_copy(userCommandUnformated);
+            
+            if (userCommand == "login")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+            }
+            else if(userCommand == "send")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+            }
+            else if(userCommand == "read")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+            }
+            else if(userCommand == "list")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+            }
+            else if(userCommand == "delete")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+            }
+            else if(userCommand == "quit")
+            {
+                client.SendMessage(userCommand);
+                response = client.ReadMessage();
+                std::cout << response << std::endl;
+
+            }
+            else
+            {
+                throw std::invalid_argument("invalid input");
+            }
+            
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
+        
     }
 
     return 0;

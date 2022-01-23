@@ -20,6 +20,7 @@
 #include "clientHandler.class.h"
 #include "clientConnected.class.h"
 #include "../Other/user.struct.cpp"
+#include "../Other/command.set.cpp"
 // #include "messageHandler.class.h"
 
 class Server

@@ -31,13 +31,30 @@ void Client::PrintHelpMessage()
 
 string Client::ReadMessage()
 {
-    cout << "Not Implemented" << endl;
-    return "Not Implemented";
+    if(!_connected)
+        return "";
+
+    string message;
+
+    int messageSize = std::stoi(ReadLineSocket(_sd));
+    if (messageSize)
+        return message = ReadNBytesSocket(_sd, messageSize);
+
+    return message = "Nothing sent from server.";
 }
 
-void Client::SendMessage(const std::string& text)
+void Client::SendMessage(const string& text)
 {
-    cout << "Not Implemented" << endl;
+    if(!_connected)
+        return;
+
+    // send size of message
+    // (socket, size of the stringsize , size of text)
+    // std::cout << std::to_string(text.size()) << std::endl;
+    SendNBytesSocket(_sd, std::to_string(text.size()).size() + 1, std::to_string(text.size()) + '\n');
+    // send message
+    // std::cout << text << std::endl;
+    SendNBytesSocket(_sd, text.size(), text);
 }
 
 void Client::Connect2Server(const string& ip, const string& port)
